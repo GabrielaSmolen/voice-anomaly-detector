@@ -5,6 +5,11 @@ import librosa.display
 import sklearn
 
 
+def audio(audio_path):
+    x, sr = librosa.load(audio_path)
+    return x, sr
+
+
 def waveform(x, sr):
     plt.figure()
     librosa.display.waveplot(x, sr=sr)
@@ -64,10 +69,8 @@ def sr_waveform(spectral_rolloff):
 
 
 if __name__ == '__main__':
-    audio_path = 'data/wav/1-a_l.wav'
-    x, sr = librosa.load(audio_path)
+    x, sr = audio('data/wav/1-a_h.wav')
 
-    ipd.Audio(audio_path)
     waveform = waveform(x, sr)
     spectrogram = spectrogram(x, sr)
     zero_crossing = zero_crossing(x)
