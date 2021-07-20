@@ -3,12 +3,6 @@ import IPython.display as ipd
 import matplotlib.pyplot as plt
 import librosa.display
 
-audio_path = 'data/wav/1-a_l.wav'
-x, sr = librosa.load(audio_path)
-print(type(x), type(sr))
-
-ipd.Audio(audio_path)
-
 
 def waveplot(x, sr):
     plt.figure()
@@ -33,7 +27,12 @@ def zero_crossing(x):
     return sum(zero_crossings)
 
 
-waveplot = waveplot(x, sr)
-spectrogram = spectrogram(x, sr)
-zero_crossing = zero_crossing(x)
+if __name__ == '__main__':
+    audio_path = 'data/wav/1-a_l.wav'
+    x, sr = librosa.load(audio_path)
+
+    ipd.Audio(audio_path)
+    waveplot = waveplot(x, sr)
+    spectrogram = spectrogram(x, sr)
+    zero_crossing = zero_crossing(x)
 
