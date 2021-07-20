@@ -1,5 +1,4 @@
 import librosa
-import IPython.display as ipd
 import matplotlib.pyplot as plt
 import librosa.display
 import sklearn
@@ -39,7 +38,6 @@ def spectral_centroid(x, sr):
 
 
 def sc_waveform(spectral_centroids):
-    spectral_centroids.shape
     frames = range(len(spectral_centroids))
     t = librosa.frames_to_time(frames)
 
