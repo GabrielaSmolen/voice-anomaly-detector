@@ -1,1 +1,1 @@
-# voice-anomaly-detector
+In this project I will be creating a voice anomaly detector using basic Machine Learning methods.
