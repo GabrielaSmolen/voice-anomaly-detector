@@ -54,8 +54,8 @@ def spectral_rolloff(x, sr):
     return spectral_rolloff
 
 
-def sr_waveform(spectral_rolloff):
-    frames = range(len(spectral_rolloff))
+def sr_waveform(spectral_rolloff, spectral_centroids):
+    frames = range(len(spectral_centroids))
     t = librosa.frames_to_time(frames)
 
     def normalize(x, axis=0):
@@ -81,5 +81,5 @@ if __name__ == '__main__':
     spectral_centroids = spectral_centroid(x, sr)
     sc_waveform = sc_waveform(spectral_centroids)
     spectral_rolloff = spectral_rolloff(x, sr)
-    sr_waveform = sr_waveform(spectral_rolloff)
+    sr_waveform = sr_waveform(spectral_rolloff, spectral_centroids)
     mfccs = mfcc(x, sr)
