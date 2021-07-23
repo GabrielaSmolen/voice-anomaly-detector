@@ -29,7 +29,7 @@ def spectrogram(x, sr):
 
 def zero_crossing(x):
     zero_crossings = librosa.zero_crossings(x, pad=False)
-    return sum(zero_crossings)
+    return print(sum(zero_crossings))
 
 
 def spectral_centroid(x, sr):
@@ -66,6 +66,12 @@ def sr_waveform(spectral_rolloff):
     return plt.show()
 
 
+def mfcc(x, sr):
+    mfccs = librosa.feature.mfcc(x, sr=sr)
+    print(mfccs.shape)
+    return mfccs
+
+
 if __name__ == '__main__':
     x, sr = audio('data/wav/1-a_h.wav')
 
@@ -76,5 +82,4 @@ if __name__ == '__main__':
     sc_waveform = sc_waveform(spectral_centroids)
     spectral_rolloff = spectral_rolloff(x, sr)
     sr_waveform = sr_waveform(spectral_rolloff)
-
-
+    mfccs = mfcc(x, sr)
