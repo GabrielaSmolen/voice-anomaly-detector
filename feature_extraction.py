@@ -32,7 +32,7 @@ def spectrogram(x, sr):
 
 def zero_crossing(x):
     zero_crossings = librosa.zero_crossings(x, pad=False)
-    return print(sum(zero_crossings))
+    return sum(zero_crossings)
 
 
 def spectral_centroid(x, sr):
@@ -134,4 +134,5 @@ if __name__ == '__main__':
     print(percentile_25)
     print(np.max(spectral_centroids))
     print(np.min(spectral_centroids))
-    print(max_ptp_value(spectral_centroids)) #question
+    print(max_ptp_value(spectral_centroids))
+    # question
