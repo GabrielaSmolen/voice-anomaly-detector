@@ -1,7 +1,10 @@
 import librosa
 import matplotlib.pyplot as plt
 import librosa.display
+import numpy as np
 import sklearn
+from numpy import trapz
+import statistics
 
 
 def audio(audio_path):
@@ -72,6 +75,30 @@ def mfcc(x, sr):
     return mfccs
 
 
+def mfccs(mfccs, sr):
+    return librosa.display.specshow(mfccs, sr=sr, x_axis='time')
+
+
+def auc(array):
+    auc = trapz(array, dx=5)
+    return auc
+
+
+def mean(array):
+    mean = statistics.mean(array)
+    return mean
+
+
+def std(array):
+    std = np.std(array)
+    return std
+
+
+def percentile(array, p):
+    percentile = np.percentile(array, p)
+    return percentile
+
+
 if __name__ == '__main__':
     x, sr = audio('data/wav/1-a_h.wav')
 
@@ -83,3 +110,22 @@ if __name__ == '__main__':
     spectral_rolloff = spectral_rolloff(x, sr)
     sr_waveform = sr_waveform(spectral_rolloff, spectral_centroids)
     mfccs = mfcc(x, sr)
+    # mfccs_daria = mfccs(mfccs, sr)
+    auc_centroids = auc(spectral_centroids)
+    print("AUC centroids: ", auc_centroids)
+    auc_rolloff = auc(spectral_rolloff)
+    print("AUC rolloff: ", auc_rolloff)
+    mean_centroids = mean(spectral_centroids)
+    print("Mean centroids: ", mean_centroids)
+    mean_rolloff = mean(spectral_rolloff)
+    print("Mean rolloff: ", mean_rolloff)
+    std_centroids = std(spectral_centroids)
+    print("STD centroids: ", std_centroids)
+    std_rolloff = std(spectral_rolloff)
+    print("STD rolloff: ", std_rolloff)
+    percentile_25 = percentile(spectral_centroids, 25)
+    print(percentile_25)
+    percentile_50 = percentile(spectral_centroids, 50)
+    print(percentile_50)
+    percentile_75 = percentile(spectral_centroids, 75)
+    print(percentile_75)
