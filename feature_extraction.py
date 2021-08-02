@@ -99,6 +99,13 @@ def percentile(array, p):
     return percentile
 
 
+def max_ptp_value(array):
+    max = np.max(array)
+    min = np.min(array)
+    value = abs(max-min)
+    return value
+
+
 if __name__ == '__main__':
     x, sr = audio('data/wav/1-a_h.wav')
 
@@ -125,7 +132,6 @@ if __name__ == '__main__':
     print("STD rolloff: ", std_rolloff)
     percentile_25 = percentile(spectral_centroids, 25)
     print(percentile_25)
-    percentile_50 = percentile(spectral_centroids, 50)
-    print(percentile_50)
-    percentile_75 = percentile(spectral_centroids, 75)
-    print(percentile_75)
+    print(np.max(spectral_centroids))
+    print(np.min(spectral_centroids))
+    print(max_ptp_value(spectral_centroids)) #question
