@@ -19,12 +19,8 @@ def spectral_rolloff(x, sr):
 
 def mfcc(x, sr):
     mfccs = librosa.feature.mfcc(x, sr=sr)
-    print(mfccs.shape)
+    print("MFCC shape: ", mfccs.shape)
     return mfccs
-
-
-# def mfccs(mfccs, sr):
-#     return librosa.display.specshow(mfccs, sr=sr, x_axis='time')
 
 
 def get_auc(array):
@@ -54,15 +50,11 @@ def max_ptp_value(array):
 if __name__ == '__main__':
     x, sr = librosa.load('data/wav/1-a_h.wav')
 
-    # waveform = waveform(x, sr)
-    # spectrogram = spectrogram(x, sr)
     zero_crossing = zero_crossing(x)
+    print("Zero crossing: ", zero_crossing)
     spectral_centroids = spectral_centroid(x, sr)
-    # sc_waveform = sc_waveform(spectral_centroids)
     spectral_rolloff = spectral_rolloff(x, sr)
-    # sr_waveform = sr_waveform(spectral_rolloff, spectral_centroids)
     mfccs = mfcc(x, sr)
-    # mfccs_daria = mfccs(mfccs, sr)
     auc_centroids = get_auc(spectral_centroids)
     print("AUC centroids: ", auc_centroids)
     auc_rolloff = get_auc(spectral_rolloff)
@@ -77,7 +69,4 @@ if __name__ == '__main__':
     print("STD rolloff: ", std_rolloff)
     percentile_25 = percentile(spectral_centroids, 25)
     print(percentile_25)
-    print(np.max(spectral_centroids))
-    print(np.min(spectral_centroids))
     print(max_ptp_value(spectral_centroids))
-    # question
