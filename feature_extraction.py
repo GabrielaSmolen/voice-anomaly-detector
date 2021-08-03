@@ -23,6 +23,10 @@ def mfcc(x, sr):
     return mfccs
 
 
+def mfcc_mean(mfccs):
+    return np.mean(mfccs)
+
+
 def get_auc(array):
     auc = trapz(array, dx=5)
     return auc
@@ -55,6 +59,8 @@ if __name__ == '__main__':
     spectral_centroids = spectral_centroid(x, sr)
     spectral_rolloff = spectral_rolloff(x, sr)
     mfccs = mfcc(x, sr)
+    mfcc_mean = mfcc_mean(mfccs)
+    print("MFCC mean: ", mfcc_mean)
     auc_centroids = get_auc(spectral_centroids)
     print("AUC centroids: ", auc_centroids)
     auc_rolloff = get_auc(spectral_rolloff)
