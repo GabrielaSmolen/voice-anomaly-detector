@@ -2,24 +2,53 @@ from os import listdir
 import feature_extraction as fe
 import librosa
 from os.path import isfile, join
+import pandas as pd
+import numpy as np
 
 
 def feature_extraction(audio_path):
     x, sr = librosa.load(audio_path)
-    signal_zero_crossing = fe.zero_crossing(x)
-    signal_auc = fe.get_auc(x)
-    signal_mean = fe.mean(x)
-    signal_std = fe.std(x)
-    signal_ptp_value = fe.max_ptp_value(x)
+    signal_zero_crossings = fe.zero_crossing(x)
+    spectral_centroid = fe.spectral_centroid(x, sr)
+    spectral_rolloff = fe.spectral_rolloff(x, sr)
+    centroid_auc = fe.get_auc(spectral_centroid)
+    rolloff_auc = fe.get_auc(spectral_rolloff)
+    centroid_mean = fe.mean(spectral_centroid)
+    rolloff_mean = fe.mean(spectral_rolloff)
+    centroid_std = fe.std(spectral_centroid)
+    rolloff_std = fe.std(spectral_rolloff)
+    centroid_ptp_value = fe.max_ptp_value(spectral_centroid)
+    rolloff_ptp_value = fe.max_ptp_value(spectral_rolloff)
     signal_mfcc = fe.mfcc(x, sr)
     signal_mfcc_shape = signal_mfcc.shape
     signal_mfcc_mean = fe.mfcc_mean(signal_mfcc)
-    return signal_zero_crossing, signal_auc, signal_mean, signal_std,\
-           signal_ptp_value, signal_mfcc_mean, signal_mfcc_shape
+    return '', signal_zero_crossings, centroid_auc, rolloff_auc, centroid_mean, rolloff_mean, centroid_std,\
+           rolloff_std, centroid_ptp_value, rolloff_ptp_value, signal_mfcc_mean, signal_mfcc_shape
 
 
 if __name__ == '__main__':
-    root = 'data/healthy'
-    files = [join(root, file) for file in listdir(root) if isfile(join(root, file))]
-    for file in files:
-        zero_crossing, auc, mean, std, ptp_value, mfcc_mean, mfcc_shape = feature_extraction(file)
+    root_healthy = 'data/healthy'
+    root_unhealthy = 'data/unhealthy'
+    files_healthy = [join(root_healthy, file) for file in listdir(root_healthy) if isfile(join(root_healthy, file))]
+    columns = ['ID', 'Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean', 'Rolloff mean', 'Centroid STD',
+              'Rolloff STD', 'Centroid p-t-p value', 'Rolloff p-t-p value', 'MFCC mean', "MFCC shape", 'Label']
+    df = pd.DataFrame(columns=columns)
+    for file in files_healthy:
+        feats = feature_extraction(file)
+        label = 'healthy'
+        feats = list(feats)
+        feats.append(label)
+        df2 = pd.DataFrame([feats], columns=columns)
+        df = df.append(df2)
+
+    files_unhealthy = [join(root_unhealthy, file) for file in listdir(root_unhealthy) if isfile(join(root_unhealthy, file))]
+
+    for file in files_unhealthy:
+        feats = feature_extraction(file)
+        label = 'unhealthy'
+        feats = list(feats)
+        feats.append(label)
+        df2 = pd.DataFrame([feats], columns=columns)
+        df = df.append(df2)
+
+print()
