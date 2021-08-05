@@ -22,8 +22,12 @@ def mfcc(x, sr):
     return mfcc
 
 
-def mfcc_mean(mfccs):
-    return np.mean(mfccs)
+def mfcc_means(mfccs):
+    means = []
+    for i in range(0, len(mfccs)):
+        mfcc = np.mean(mfccs[i, :])
+        means.append(mfcc)
+    return means
 
 
 def get_auc(array):
@@ -51,13 +55,13 @@ def max_ptp_value(array):
 
 
 if __name__ == '__main__':
-    x, sr = librosa.load('data/wav/1-a_h.wav')
+    x, sr = librosa.load('data/healthy/1-a_h.wav')
 
     zero_crossing = zero_crossing(x)
     spectral_centroids = spectral_centroid(x, sr)
     spectral_rolloff = spectral_rolloff(x, sr)
     mfcc = mfcc(x, sr)
-    mfcc_mean = mfcc_mean(mfcc)
+    means = mfcc_means(mfcc)
     auc_centroids = get_auc(spectral_centroids)
     auc_rolloff = get_auc(spectral_rolloff)
     mean_centroids = mean(spectral_centroids)
