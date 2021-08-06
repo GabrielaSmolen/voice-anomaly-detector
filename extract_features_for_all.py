@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     files_healthy = [join(root_healthy, file) for file in listdir(root_healthy) if isfile(join(root_healthy, file))]
     columns = ['ID', 'Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean', 'Rolloff mean', 'Centroid STD',
-              'Rolloff STD', 'Centroid p-t-p value', 'Rolloff p-t-p value', 'Label'] + means
+              'Rolloff STD', 'Centroid p-t-p value', 'Rolloff p-t-p value'] + means + ['Label']
     df = pd.DataFrame(columns=columns)
     for file in tqdm.tqdm(files_healthy):
         feats = feature_extraction(file)
