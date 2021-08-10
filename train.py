@@ -3,6 +3,9 @@ import numpy as np
 from sklearn.model_selection import StratifiedKFold
 from sklearn.linear_model import LogisticRegression
 from sklearn import preprocessing
+from sklearn.metrics import accuracy_score
+from baseline import Baseline
+
 
 df = pd.read_csv('data/features.csv')
 
@@ -24,14 +27,18 @@ for train_index, test_index in splits:
     encode_labels.classes_ = list(encode_labels.classes_)
     labels = encode_labels.transform(df["Label"])
     labels_train = labels[train_index]
-    log_reg = LogisticRegression(max_iter=2100)
-    log_reg.fit(train_x, labels_train)
-    y_predict = log_reg.predict(test_x)
+    # model = Baseline()
+    model = LogisticRegression(max_iter=2100)
+    model.fit(train_x, labels_train)
+    y_predict_test = model.predict(test_x)
+    y_predict_train = model.predict(train_x)
     labels_test = labels[test_index]
-    print('Accuracy of logistic regression classifier on test set: {:.2f}'.format(log_reg.score(test_x, labels_test)))
-    print('Accuracy of logistic regression classifier on train set: {:.2f}'.format(log_reg.score(train_x, labels_train)))
-    test_result.append(log_reg.score(test_x, labels_test))
-    train_result.append(log_reg.score(train_x, labels_train))
+    score_test = accuracy_score(labels_test, y_predict_test)
+    score_train = accuracy_score(labels_train, y_predict_train)
+    print('Accuracy of logistic regression classifier on test set: ', score_test)
+    print('Accuracy of logistic regression classifier on train set: ', score_train)
+    test_result.append(score_test)
+    train_result.append(score_train)
 
 
 result_test_mean = np.mean(test_result)
