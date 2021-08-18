@@ -18,8 +18,18 @@ def spectral_rolloff(x, sr):
 
 
 def mfcc(x, sr):
-    mfcc = librosa.feature.mfcc(x, sr=sr)
+    mfcc = librosa.feature.mfcc(x, sr=sr, n_mfcc=13)
     return mfcc
+
+
+def mfcc_delta(mfcc):
+    delta = librosa.feature.delta(mfcc)
+    return delta
+
+
+def mfcc_delta2(mfcc):
+    delta2 = librosa.feature.delta(mfcc, order=2)
+    return delta2
 
 
 def get_auc(array):
@@ -47,12 +57,13 @@ def max_ptp_value(array):
 
 
 if __name__ == '__main__':
-    x, sr = librosa.load('data/healthy/1-a_h.wav')
+    x, sr = librosa.load('data/healthy/1-a_n.wav')
 
     zero_crossing = zero_crossing(x)
     spectral_centroids = spectral_centroid(x, sr)
     spectral_rolloff = spectral_rolloff(x, sr)
     mfcc = mfcc(x, sr)
+    mfcc_delta = mfcc_delta(mfcc)
     auc_centroids = get_auc(spectral_centroids)
     auc_rolloff = get_auc(spectral_rolloff)
     mean_centroids = mean(spectral_centroids)
