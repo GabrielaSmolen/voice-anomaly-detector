@@ -9,7 +9,7 @@ import tqdm
 
 def feature_extraction(audio_path):
     x, sr = librosa.load(audio_path)
-    features = np.zeros((30,))
+    features = np.zeros((49,))
     features[0] = audio_path.split("\\")[1].split("-")[0]
     features[1] = fe.zero_crossing(x)
     spectral_centroid = fe.spectral_centroid(x, sr)
@@ -23,7 +23,9 @@ def feature_extraction(audio_path):
     features[8] = fe.max_ptp_value(spectral_centroid)
     features[9] = fe.max_ptp_value(spectral_rolloff)
     signal_mfcc = fe.mfcc(x, sr)
-    features[10:30] = np.mean(signal_mfcc, axis=1)
+    features[10:23] = np.mean(signal_mfcc, axis=1)
+    features[23:36] = fe.mfcc_delta(signal_mfcc[:, 1])
+    features[36:49] = fe.mfcc_delta2(signal_mfcc[:, 1])
     return features
 
 
@@ -31,11 +33,13 @@ if __name__ == '__main__':
     root_healthy = 'data/healthy'
     root_unhealthy = 'data/unhealthy'
 
-    means = ['MFCC mean ' + str(x) for x in range(1, 21)]
+    means = ['MFCC mean ' + str(x) for x in range(1, 14)]
+    deltas = ['MFCC delta ' + str(x) for x in range(1, 14)]
+    deltas2 = ['MFCC delta 2  ' + str(x) for x in range(1, 14)]
 
     files_healthy = [join(root_healthy, file) for file in listdir(root_healthy) if isfile(join(root_healthy, file))]
     columns = ['ID', 'Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean', 'Rolloff mean', 'Centroid STD',
-              'Rolloff STD', 'Centroid p-t-p value', 'Rolloff p-t-p value'] + means + ['Label']
+              'Rolloff STD', 'Centroid p-t-p value', 'Rolloff p-t-p value'] + means + deltas + deltas2 + ['Label']
     df = pd.DataFrame(columns=columns)
     for file in tqdm.tqdm(files_healthy):
         feats = feature_extraction(file)
