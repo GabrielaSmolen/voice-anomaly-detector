@@ -24,12 +24,24 @@ def mfcc(x, sr):
 
 def mfcc_delta(mfcc):
     delta = librosa.feature.delta(mfcc)
-    return delta
+    mean_delta = np.mean(delta, axis=1)
+    return mean_delta
 
 
 def mfcc_delta2(mfcc):
     delta2 = librosa.feature.delta(mfcc, order=2)
-    return delta2
+    mean_delta2 = np.mean(delta2, axis=1)
+    return mean_delta2
+
+
+def mfcc_max_min(mfcc):
+    diffs = abs(np.max(mfcc, axis=1) - np.min(mfcc, axis=1))
+    return diffs
+
+
+def mfcc_std(mfcc):
+    std_mfcc = np.std(mfcc, axis=1)
+    return std_mfcc
 
 
 def get_auc(array):
@@ -56,6 +68,11 @@ def max_ptp_value(array):
     return value
 
 
+def melspectrogram(x, sr):
+    spectrogram = librosa.feature.melspectrogram(x, sr)
+    return spectrogram
+
+
 if __name__ == '__main__':
     x, sr = librosa.load('data/healthy/1-a_n.wav')
 
@@ -64,6 +81,10 @@ if __name__ == '__main__':
     spectral_rolloff = spectral_rolloff(x, sr)
     mfcc = mfcc(x, sr)
     mfcc_delta = mfcc_delta(mfcc)
+    diff = mfcc_max_min(mfcc)
+    std = mfcc_std(mfcc)
+    spectrogram = melspectrogram(x, sr)
+    mean = np.mean(spectrogram[0:40, :], axis=1)
     auc_centroids = get_auc(spectral_centroids)
     auc_rolloff = get_auc(spectral_rolloff)
     mean_centroids = mean(spectral_centroids)
