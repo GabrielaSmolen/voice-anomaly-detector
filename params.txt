@@ -1,9 +1,0 @@
-{"n_estimators": 50, "max_depth": 5, "min_samples_split": 10, "min_samples_leaf": 20, "max_samples": 100} Train score: 0.6660955717253221 Test score: 0.6624214967160458
-{"n_estimators": 150, "max_depth": 5, "min_samples_split": 10, "min_samples_leaf": 20, "max_samples": 100} Train score: 0.6646250585353554 Test score: 0.6634006903494893
-{"n_estimators": 10, "max_depth": 5, "min_samples_split": 10, "min_samples_leaf": 20, "max_samples": 100} Train score: 0.6782234219468558 Test score: 0.6545759624143055
-{"n_estimators": 300, "max_depth": 5, "min_samples_split": 10, "min_samples_leaf": 20, "max_samples": 100} Train score: 0.666830415571005 Test score: 0.662910494271058
-{"n_estimators": 100, "max_depth": 5, "min_samples_split": 5, "min_samples_leaf": 20, "max_samples": 100} Train score: 0.6694037948921148 Test score: 0.6653602761397956
-{"n_estimators": 100, "max_depth": 5, "min_samples_split": 30, "min_samples_leaf": 20, "max_samples": 100} Train score: 0.6686694013183964 Test score: 0.6634006903494893
-{"n_estimators": 100, "max_depth": 5, "min_samples_split": 30, "min_samples_leaf": 50, "max_samples": 100} Train score: 0.6634003187925508 Test score: 0.6634006903494893
-{"n_estimators": 100, "max_depth": 5, "min_samples_split": 30, "min_samples_leaf": 50, "max_samples": 10} Train score: 0.6634003187925508 Test score: 0.6634006903494893
-{"n_estimators": 100, "max_depth": 5, "min_samples_split": 30, "min_samples_leaf": 50, "max_samples": 10} Train score: 0.6634003187925508 Test score: 0.6634006903494893
