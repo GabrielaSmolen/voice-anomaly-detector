@@ -13,7 +13,7 @@ Download data from TODO to `data/` folder
 
 ### Project goals
 
-- [ ] Create features
-- [ ] Prepare baseline and train a model better than that
-- [ ] Learn about and implement cross-validation
+- [x] Create features
+- [x] Prepare baseline and train a model better than that
+- [x] Learn about and implement cross-validation
 - [ ] Create API
