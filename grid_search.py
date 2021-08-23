@@ -6,6 +6,8 @@ import json
 
 df = pd.read_csv('data/features.csv')
 
+# grid_params = {'C': [10, 5, 30], 'kernel': ['linear', 'poly', 'rbf', 'sigmoid'], 'gamma': ['auto', 'scale']}
+
 grid_params = {'n_estimators': [50, 100, 150], 'max_depth': [10, 20, 30],
           'min_samples_split': [2, 5, 10, 20], 'min_samples_leaf': [2, 5, 10, 20],
           'max_samples': [100, 200, 300]}
@@ -15,6 +17,7 @@ best_score = 0
 for params in tqdm.tqdm(itertools.product(*grid_params.values())):
     params = {'n_estimators': params[0], 'max_depth': params[1], 'min_samples_split': params[2],
               'min_samples_leaf': params[3], 'max_samples': params[4]}
+    # params = {'C': params[0], 'kernel': params[1], 'gamma': params[2]}
     test_result, train_result, train_x, model = train_model(df, params)
     if test_result > best_score:
         best_score = test_result
