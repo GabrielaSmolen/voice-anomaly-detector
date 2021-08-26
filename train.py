@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 from sklearn import preprocessing
 from sklearn.metrics import f1_score, classification_report
 from sklearn.svm import SVC
-import lightgbm as lgb
 from models.baseline import Baseline
 from models.lightgbm_interface import LightGBMInterface
-
 
 
 columns = ['Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean',
