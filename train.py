@@ -1,15 +1,14 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import StratifiedKFold
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import StratifiedKFold
 from sklearn import preprocessing
 from sklearn.metrics import f1_score, classification_report
-from sklearn.metrics import accuracy_score
-from baseline import Baseline
-import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 import lightgbm as lgb
+from models.baseline import Baseline
+from models.lightgbm_interface import LightGBMInterface
+
 
 
 columns = ['Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean',
@@ -28,7 +27,7 @@ columns = ['Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean',
 
 
 def train_model(df, params):
-    k_fold = StratifiedKFold(n_splits=5, shuffle=True)
+    k_fold = StratifiedKFold(n_splits=5)
     splits = k_fold.split(df, df["Label"])
 
     test_result = []
@@ -45,14 +44,14 @@ def train_model(df, params):
         test_x = df.loc[test_index]
         labels_train = labels[train_index]
         labels_test = labels[test_index]
-        params = {'num_leaves': 31, 'objective': 'binary'}
 
         # model = Baseline()
         # model = LogisticRegression(C=70, solver='newton-cg')
         # model = RandomForestClassifier(**params)
-        model = SVC(C=5, kernel='poly', gamma='auto')
+        # model = SVC(C=5, kernel='linear', gamma='auto', verbose=2)
+        model = LightGBMInterface(params=params)
 
-        # model.fit(train_x, labels_train)
+        model.fit(train_x, labels_train)
         y_predict_test = model.predict(test_x)
         y_predict_train = model.predict(train_x)
         score_test = f1_score(labels_test, y_predict_test)
@@ -70,7 +69,10 @@ def train_model(df, params):
 if __name__ == '__main__':
     df = pd.read_csv('data/features.csv')
 
-    params = {'n_estimators': 150, 'max_depth': 30, 'min_samples_split': 5, 'min_samples_leaf': 5, 'max_samples': 100}
+    # params = {'n_estimators': 150, 'max_depth': 30, 'min_samples_split': 5, 'min_samples_leaf': 5, 'max_samples': 100}
+    # Random Forest params
+    params = {'num_iterations': 40, 'num_leaves': 50, 'min_data_in_leaf': 40, 'objective': 'binary'}  # LightGBM params
+    # grid_params = {'C': 5, 'kernel': 'linear', 'gamma': 'auto'} # SVM params
 
     test_result, train_result, train_x, model = train_model(df, params)
 
