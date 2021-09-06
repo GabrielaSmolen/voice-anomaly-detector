@@ -9,7 +9,7 @@ import tqdm
 
 def feature_extraction(audio_path):
     x, sr = librosa.load(audio_path)
-    features = np.zeros((75,))
+    features = np.zeros((77,))
     features[0] = audio_path.split("\\")[1].split("-")[0]
     features[1] = fe.zero_crossing(x)
     spectral_centroid = fe.spectral_centroid(x, sr)
@@ -23,12 +23,14 @@ def feature_extraction(audio_path):
     features[8] = fe.max_ptp_value(spectral_centroid)
     features[9] = fe.max_ptp_value(spectral_rolloff)
     signal_mfcc = fe.mfcc(x, sr)
-    features[10:23] = np.mean(signal_mfcc, axis=1)
-    features[23:36] = fe.mfcc_delta(signal_mfcc)
-    features[36:49] = fe.mfcc_delta2(signal_mfcc)
+    features[10] = fe.percentile(spectral_centroid, 25)
+    features[11] = fe.percentile(spectral_rolloff, 25)
+    features[12:25] = np.mean(signal_mfcc, axis=1)
+    features[25:38] = fe.mfcc_delta(signal_mfcc)
+    features[38:51] = fe.mfcc_delta2(signal_mfcc)
 
-    features[49:62] = fe.mfcc_max_min(signal_mfcc[:, 6:-6])
-    features[62:75] = fe.mfcc_std(signal_mfcc[:, 6:-6])
+    features[51:64] = fe.mfcc_max_min(signal_mfcc[:, 6:-6])
+    features[64:77] = fe.mfcc_std(signal_mfcc[:, 6:-6])
     return features
 
 
@@ -44,7 +46,8 @@ if __name__ == '__main__':
 
     files_healthy = [join(root_healthy, file) for file in listdir(root_healthy) if isfile(join(root_healthy, file))]
     columns = ['ID', 'Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean', 'Rolloff mean', 'Centroid STD',
-              'Rolloff STD', 'Centroid p-t-p value', 'Rolloff p-t-p value'] + means + deltas + deltas2 + max_min + std + ['Label']
+              'Rolloff STD', 'Centroid p-t-p value', 'Rolloff p-t-p value', 'Centroid_percentile',
+               'Rolloff_percentile'] + means + deltas + deltas2 + max_min + std + ['Label']
     df = pd.DataFrame(columns=columns)
     for file in tqdm.tqdm(files_healthy):
         feats = feature_extraction(file)
