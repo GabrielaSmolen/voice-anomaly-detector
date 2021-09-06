@@ -1,11 +1,14 @@
+import json
 import pandas as pd
 import numpy as np
+
+from sklearn.svm import SVC
+from sklearn import preprocessing
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
-from sklearn import preprocessing
 from sklearn.metrics import f1_score, classification_report
-from sklearn.svm import SVC
+
 from models.baseline import Baseline
 from models.lightgbm_interface import LightGBMInterface
 
@@ -26,7 +29,7 @@ columns = ['Zero crossings', 'Centroid AUC', 'Rolloff AUC', 'Centroid mean',
 
 
 def train_model(df, params):
-    k_fold = StratifiedKFold(n_splits=5)
+    k_fold = StratifiedKFold(n_splits=5, shuffle=True)
     splits = k_fold.split(df, df["Label"])
 
     test_result = []
@@ -47,7 +50,7 @@ def train_model(df, params):
         # model = Baseline()
         # model = LogisticRegression(C=70, solver='newton-cg')
         # model = RandomForestClassifier(**params)
-        # model = SVC(C=5, kernel='linear', gamma='auto', verbose=2)
+        # model = SVC(**params)
         model = LightGBMInterface(params=params)
 
         model.fit(train_x, labels_train)
@@ -56,24 +59,20 @@ def train_model(df, params):
         score_test = f1_score(labels_test, y_predict_test)
         score_train = f1_score(labels_train, y_predict_train)
         print(classification_report(labels_test, y_predict_test))
-        # print('Test score: ', score_test)
-        # print('Train score: ', score_train)
         test_result.append(score_test)
         train_result.append(score_train)
-        result_test_mean = np.mean(test_result)
-        result_train_mean = np.mean(train_result)
-    return result_test_mean, result_train_mean, train_x, model
+    return test_result, train_result
 
 
 if __name__ == '__main__':
     df = pd.read_csv('data/features.csv')
 
-    # params = {'n_estimators': 150, 'max_depth': 30, 'min_samples_split': 5, 'min_samples_leaf': 5, 'max_samples': 100}
+    # params = {'n_estimators': 100, 'max_depth': 30, 'min_samples_split': 50, 'min_samples_leaf': 20, 'max_samples': 100}
     # Random Forest params
     params = {'num_iterations': 40, 'num_leaves': 50, 'min_data_in_leaf': 40, 'objective': 'binary'}  # LightGBM params
-    # grid_params = {'C': 5, 'kernel': 'linear', 'gamma': 'auto'} # SVM params
+    # params = {'C': 5, 'kernel': 'sigmoid', 'gamma': 'auto'} # SVM params
 
-    test_result, train_result, train_x, model = train_model(df, params)
+    test_result, train_result = train_model(df, params)
 
     result_test_mean = np.mean(test_result)
     result_test_std = np.std(test_result)
@@ -85,18 +84,7 @@ if __name__ == '__main__':
     print('Train score: ', result_train_mean)
     print('STD: ', result_train_std)
 
-    # feature_names = [train_x.columns for i in range(train_x.shape[1])]
-    # importances = model.feature_importances_
-    # std = np.std([
-    #     tree.feature_importances_ for tree in model.estimators_], axis=0)
-    # forest_importances = pd.Series(importances, index=feature_names)
-    # fig, ax = plt.subplots()
-    # forest_importances.plot.bar(yerr=std, ax=ax)
-    # ax.set_title("Feature importances using MDI")
-    # ax.set_ylabel("Mean decrease in impurity")
-    # plt.show()
-
-    # with open('params.txt', 'a') as file:
-    #     file.write(json.dumps(params) + ' ')
-    #     file.write('Train score: ' + str(result_train_mean) + ' ')
-    #     file.write('Test score: ' + str(result_test_mean) + '\n')
+    with open('params.txt', 'a') as file:
+        file.write(json.dumps(params) + ' ')
+        file.write('Train score: ' + str(result_train_mean) + ' ')
+        file.write('Test score: ' + str(result_test_mean) + '\n')
